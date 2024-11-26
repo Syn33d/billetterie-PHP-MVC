@@ -13,15 +13,31 @@ if ($uri == '/'){
     $controller->index();
 }
 
+elseif ($uri == '/index.php/login') {
+    require 'vue/login.php';
+}
+
 elseif ($uri == '/index.php/create'){
+    if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
+        header('Location: /index.php/login');
+        exit();
+    }
     require 'vue/createTicket.php';
 }
 
 elseif ($uri == '/index.php/edit'){
+    if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
+        header('Location: index.php/login');
+        exit();
+    }
     require 'vue/editTicket.php';
 }
 
 elseif ($uri == '/index.php/delete'){
+    if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
+        header('Location: index.php/login');
+        exit();
+    }
     require 'vue/deleteTicket.php';
 }
 
