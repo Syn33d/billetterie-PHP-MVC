@@ -27,7 +27,7 @@ elseif ($uri == '/index.php/create'){
 
 elseif ($uri == '/index.php/edit'){
     if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
-        header('Location: index.php/login');
+        header('Location: /index.php/login');
         exit();
     }
     require 'vue/editTicket.php';
@@ -35,7 +35,7 @@ elseif ($uri == '/index.php/edit'){
 
 elseif ($uri == '/index.php/delete'){
     if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
-        header('Location: index.php/login');
+        header('Location: /index.php/login');
         exit();
     }
     require 'vue/deleteTicket.php';
