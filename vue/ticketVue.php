@@ -11,9 +11,23 @@
 <body>
     <div class="container my-5">
         <h1 class="text-center mb-4">Gestion des Tickets</h1>
-        <div class="mb-3 text-end">
-            <button class="btn btn-primary" onclick="window.location.href='index.php/create'">Créer un ticket</button>
+        <div>
+            <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true): ?>
+                <?php if (isset($_SESSION['loggedinAsAdmin']) && $_SESSION['loggedinAsAdmin'] === true): ?>
+                    <p class="mb-0">Connecté en tant qu'administrateur</p>
+                <?php elseif (isset($_SESSION['loggedinAsUser']) && $_SESSION['loggedinAsUser'] === true): ?>
+                    <p class="mb-0">Connecté en tant qu'utilisateur</p>
+                <?php endif; ?>
+                <a class="btn btn-danger" href='/index.php/logout'>Déconnexion</a>
+            <?php else: ?>
+                <a class="btn btn-primary" href='/index.php/login'>Connexion</a>
+            <?php endif; ?>
         </div>
+        <?php if (isset($_SESSION['loggedinAsAdmin']) && $_SESSION['loggedinAsAdmin'] === true): ?>
+            <div class="mb-3 text-end">
+                <a class="btn btn-primary" href='/index.php/admin/create'>Créer un ticket</a>
+            </div>
+        <?php endif; ?>
         <div class="row">
             <?php foreach ($tickets as $ticket): ?>
             <div class="col-md-4 mb-4">
@@ -25,9 +39,13 @@
                         <p><strong>Vendues : </strong><?= $ticket['nbTicketsVendus'] ?></p>
                         <p><strong>Restantes : </strong><?= $ticket['nbTicketsRestants'] ?></p>
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-warning btn-sm" onclick="window.location.href='/index.php/edit?id=<?= $ticket['id'] ?>'">Modifier</button>
-                            <button class="btn btn-danger btn-sm" onclick="window.location.href='/index.php/delete?id=<?= $ticket['id'] ?>'">Supprimer</button>
-                            <button class="btn btn-info btn-sm" onclick="window.location.href='/index.php/detail?id=<?= $ticket['id'] ?>'">Détail</button>
+                            <?php if (isset($_SESSION['loggedinAsAdmin']) && $_SESSION['loggedinAsAdmin'] === true): ?>
+                                <a class="btn btn-warning btn-sm" href='/index.php/admin/edit?id=<?= $ticket['id'] ?>'>Modifier</a>
+                                <a class="btn btn-danger btn-sm" href='/index.php/admin/delete?id=<?= $ticket['id'] ?>'>Supprimer</a>
+                                <a class="btn btn-info btn-sm" href='/index.php/detail?id=<?= $ticket['id'] ?>'>Détail</a>
+                            <?php elseif (isset($_SESSION['loggedinAsUser']) && $_SESSION['loggedinAsUser'] === true): ?>
+                                <a class="btn btn-info btn-sm" href='/index.php/detail?id=<?= $ticket['id'] ?>'>Détail</a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,35 @@
 <?php
-session_start();
 
-require_once 'controller/ticketController.php';
+require_once 'controller/userController.php';
+
+$controller = new UserController();
+
+// Délai d'expiration de session (30 minutes)
+$sessionTimeout = 1800;
+
+// Vérifie si la session est active
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
+    session_unset();
+    session_destroy();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Pour simplifier, le mot de passe est toujours accepté
-    $_SESSION['loggedin'] = true;
+    $username = $_POST['username'];
+    $userType = $controller->login($username);
+    if ($userType) {
+        $_SESSION['loggedin'] = true;
+        if ($userType === 'admin') {
+            $_SESSION['loggedinAsAdmin'] = true;
+            header('Location: /index.php/admin');
+        } elseif ($userType === 'user') {
+            $_SESSION['loggedinAsUser'] = true;
+            header('Location: /index.php/user');
+        }
+        exit();
+    } else {
+        $error = "Nom d'utilisateur incorrect";
+    }
 }
 ?>
 
@@ -43,18 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1 class="text-center">Connexion</h1>
+<div class="container login-container">
+        <h1>Connexion</h1>
+        <?php if (isset($error)): ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
         <form method="post">
-            <div class="mb-3">
-                <label for="username" class="form-label">Nom d'utilisateur</label>
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur:</label>
                 <input type="text" id="username" name="username" class="form-control" required>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+            <button type="submit" class="btn btn-primary">Se connecter</button>
         </form>
     </div>
 </body>

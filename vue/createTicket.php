@@ -1,6 +1,11 @@
 <?php
 require_once 'controller/ticketController.php';
 
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: /index.php/login');
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     var_dump($_POST);
     $id = $_POST['id'];

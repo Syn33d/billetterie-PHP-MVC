@@ -1,11 +1,16 @@
 <?php
+
 require 'vendor/autoload.php';
 require_once 'controller/ticketController.php';
+require_once 'controller/userController.php';
 
 use Dompdf\Dompdf;
 
-$controller = new TicketController();
-$ticket = $controller->getTicketById($_GET['id']);
+$ticketController = new TicketController();
+$userController = new UserController();
+
+$ticket = $ticketController->getTicketById($_GET['id']);
+
 
 $html = '
 <!DOCTYPE html>
@@ -108,8 +113,7 @@ $html = '
                 <p><strong>Titre :</strong> ' . htmlspecialchars($ticket['title']) . '</p>
                 <p><strong>Description :</strong> ' . nl2br(htmlspecialchars($ticket['description'])) . '</p>
                 <p><strong>Date :</strong> ' . htmlspecialchars($ticket['date']) . '</p>
-                <p><strong>Nombre de billets vendus :</strong> ' . htmlspecialchars($ticket['nbTicketsVendus']) . '</p>
-                <p><strong>Nombre de billets restants :</strong> ' . htmlspecialchars($ticket['nbTicketsRestants']) . '</p>
+                <p>Ce document fait office de ticket.</p>
             </div>
         </div>
     </div>

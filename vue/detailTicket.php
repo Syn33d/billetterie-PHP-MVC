@@ -6,6 +6,10 @@ $ticket = $controller->getTicketById($_GET['id']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller->buyTicket($_GET['id']);
+    if (isset($_SESSION['loggedinAsUser']) && $_SESSION['loggedinAsUser'] === true) {
+        header('Location: pdfUser?id=' . $_GET['id']);
+        exit();
+    }
 }
 ?>
 
